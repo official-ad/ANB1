@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecting...</title>
+  <style>html, body{display:none!important;margin:0;padding:0;}</style>
+  <script>const PIXEL_ID='711445511343464';!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init',PIXEL_ID);fbq('track','ViewContent');</script>
+</head>
+<body>
+  <script>
+    const API_URL='https://mgyv1qqq11.execute-api.us-east-2.amazonaws.com/prod/1';
+    const whatsappNumbers=[
+      '5491133818674','5491125664757','5491171678825','5491170976336',
+      '5491171670533','5491170976348','5491171678824','5491156302748',
+      '5491156309699','5491171668758','5491178468327','5491178448911',
+      '5491126160328','5491178447241','5491156303738','5491171672805',
+      '5491170976352','5491156309435','5491156324296','5491133818598',
+      '5491156303204','5491125896242','5491133818664','5491171833565',
+      '5491133818652','5491133818639','5491178469537','5491178496554',
+      '5491178470347','5491178168216','5491178468261','5491178468250',
+      '5491178467366','5491178451078','5491178448872','5491178468632',
+      '5491178447554','5491178450396','5491178467380','5491178467342'
+    ];
+    function parseCookies(){return document.cookie.split('; ').reduce((c,kv)=>{const [k,...v]=kv.split('=');c[k]=v.join('=');return c;},{})}
+    function waitForCookie(name,timeout=3000){return new Promise(res=>{const i=100;let w=0;const t=setInterval(()=>{if(document.cookie.split('; ').some(c=>c.startsWith(name+'='))||w>=timeout){clearInterval(t);res()}w+=i},i)})}
+    window.addEventListener('load',async()=>{await Promise.all([waitForCookie('_fbc'),waitForCookie('_fbp')]);const cookies=parseCookies();const payload={event:'ViewContent',timestamp:new Date().toISOString(),_fbc:cookies._fbc||null,_fbp:cookies._fbp||null};try{const resp=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const {message,code}=await resp.json();const num=whatsappNumbers[Math.floor(Math.random()*whatsappNumbers.length)];window.location.href=`https://wa.me/${num}?text=${encodeURIComponent(message)}`}catch{} });
+  </script>
+</body>
+</html>
