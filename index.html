@@ -34,7 +34,7 @@
       document.documentElement.style.display = '';
 
       const API_URL = 'https://40t964l2rh.execute-api.us-east-2.amazonaws.com/prod/0';
-      const whatsappNumbers = [ /* tu lista de números */
+      const whatsappNumbers = [
         '5491133818674','5491125664757','5491171678825','5491170976336',
         '5491171670533','5491170976348','5491171678824','5491156302748',
         '5491156309699','5491171668758','5491178468327','5491178448911',
@@ -56,7 +56,8 @@
 
       // Espera a que exista la cookie o timeout
       const waitForCookie = (name, timeout = 3000) => new Promise(res => {
-        const interval = 100; let waited = 0;
+        const interval = 100;
+        let waited = 0;
         const timer = setInterval(() => {
           if (document.cookie.split('; ').some(c => c.startsWith(name + '=')) || waited >= timeout) {
             clearInterval(timer);
@@ -67,11 +68,11 @@
       });
 
       try {
-        // Esperar cookies de Facebook
-        await Promise.all([waitForCookie('_fbc'), waitForCookie('_fbp')]);
-        const cookies = parseCookies();
+        // 1) Esperamos a que Meta Pixel fije las cookies (máx. 3s)
+        await Promise.all([ waitForCookie('_fbc'), waitForCookie('_fbp') ]);
 
-        // Payload para la API
+        // 2) Leemos y construimos el payload
+        const cookies = parseCookies();
         const payload = {
           event: 'ViewContent',
           timestamp: new Date().toISOString(),
@@ -79,13 +80,13 @@
           _fbp: cookies._fbp || null
         };
 
-        // Enviar datos a la API
+        console.log('A punto de enviar POST con payload:', payload);
+
+        // 3) Enviamos al API
         const response = await fetch(API_URL, {
           method: 'POST',
           mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
@@ -98,7 +99,7 @@
           // Redirigir a WhatsApp con texto
           const randomIndex = Math.floor(Math.random() * whatsappNumbers.length);
           const number = whatsappNumbers[randomIndex];
-          const text = encodeURIComponent(message + ' ' + code);
+          const text = encodeURIComponent(`${message} ${code}`);
           window.location.href = `https://wa.me/${number}?text=${text}`;
         }
       } catch (e) {
@@ -108,3 +109,4 @@
   </script>
 </body>
 </html>
+
